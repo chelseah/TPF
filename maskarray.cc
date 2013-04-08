@@ -23,9 +23,7 @@ MaskArray::MaskArray(const double *M, int nx, int ny)
           nonzeros_+=1;
           mean_+=value_[i+j*nx_];
         }
-      //   cout << mask_[i+j*nx_] << " ";
       }
-     // cout << "\n";
     }
     if(nonzeros_==0){
       cout<<"no valid values in the map"<<endl;
@@ -37,22 +35,10 @@ MaskArray::MaskArray(const double *M, int nx, int ny)
 MaskArray::MaskArray(const MaskArray &Ma){
   double mean;
   Ma.Dimen(nx_,ny_);
-  if(value_){
-    delete [] value_;
-    value_=new double [nx_*ny_];
-  }
-  if(mask_){
-    delete [] mask_;
-    mask_=new double [nx_*ny_];
-  }
-  if(onedmeanx_){
-    delete [] onedmeanx_;
-    onedmeanx_=new double [ny_];
-  }
-  if(onedmeany_){
-    delete [] onedmeany_;
-    onedmeany_=new double [nx_];
-  }
+  value_=new double [nx_*ny_];
+  mask_=new double [nx_*ny_];
+  onedmeanx_=new double [ny_];
+  onedmeany_=new double [nx_];
   for (int i=0;i<nx_;i++){
       onedmeany_[i] = 0;
   }
@@ -64,6 +50,14 @@ MaskArray::MaskArray(const MaskArray &Ma){
   mean_ = mean;
   Ma.View(value_);
   Ma.Mask(mask_);
+  nonzeros_ = 0;
+  for (int j=0;j<ny_;j++){
+    for (int i=0;i<nx_;i++){
+      if(value_[i+j*nx_] == 1){
+          nonzeros_+=1;
+      }
+    }
+  }
   return;
 }
 MaskArray::~MaskArray(){ 
@@ -77,6 +71,7 @@ void MaskArray::Copy(double *value, double *mask, int nx, int ny){
     cout << "dimension not match!" << endl;
     exit(1);
   }
+  mean_=0;
   nonzeros_=0;
   for (int j=0;j<ny_;j++){
     for (int i=0;i<nx_;i++){
@@ -88,9 +83,10 @@ void MaskArray::Copy(double *value, double *mask, int nx, int ny){
   }
   mean_/=nonzeros_;
 }
-void MaskArray::Dimen(int nx, int ny) const{
+void MaskArray::Dimen(int &nx, int &ny) const{
   nx = nx_;
   ny = ny_;
+  return;
 }
 void MaskArray::View(double *M) const{
     for (int j=0;j<ny_;j++){
@@ -210,7 +206,7 @@ void MaskArray::StandOutput() const{
     for (int i=0;i<nx_;i++){
       cout << value_[i+j*nx_] << " "; 
     }
-    cout << " " << endl; 
+    cout <<  "\n"; 
   }
 
 }

@@ -13,7 +13,7 @@ def main():
     plt.imshow(mdat)
     plt.xlabel("Nbin")
     plt.ylabel("Ntran")
-    plt.title("Outlier and OOT-model")
+    plt.title("Transit and NonTTV-model")
     plt.colorbar()
     plt.show()
     return

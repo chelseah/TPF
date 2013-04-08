@@ -8,7 +8,7 @@ class MaskArray {
     MaskArray(const MaskArray &Ma);
     ~MaskArray();
     void Mean(double &mean) const;
-    void Dimen(int nx, int ny) const;
+    void Dimen(int &nx, int &ny) const;
     void View(double *M) const; //return a view of value;
     void Mask(double *M) const; //return a view of mask;
     void MaskView(double *M) const; //return a masked riew of M;

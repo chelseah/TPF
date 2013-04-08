@@ -7,6 +7,10 @@ TransitMask :: TransitMask(const double *cmap, int nbin, int ntr,double high,dou
     }
   }
 }
+TransitMask :: TransitMask(const TransitMask &TM):MaskArray(TM){
+  transit_ = new double [nx_*ny_];
+  TM.OutputTransit(transit_,high_,low_);
+}
 TransitMask ::~TransitMask(){
   delete [] transit_;
 }

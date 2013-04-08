@@ -7,6 +7,7 @@ using namespace std;
 class TransitMask :  public MaskArray{
   public:
     TransitMask(const double *cmap, int nbin, int ntr,double high,double low);
+    TransitMask(const TransitMask &TM);
     ~TransitMask();
     void TransitModel(const double *Ma);
     void OutputTransit(double *M, double & high, double &low) const;

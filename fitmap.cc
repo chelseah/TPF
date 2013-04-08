@@ -165,6 +165,7 @@ void Fitmap::FitTran_(int qint, TransitMask &newtran, int &indmin,double &err){
   AllTranMask_(indmin);
   newtran.TransitModel(dipmask_);
   newtran.OutputTransit(model_,temphigh, templow);
+  return;
 }
 void Fitmap::FitTTV(int nshift, int qint){
   //nshift=0 is the same as not allow TTV
@@ -174,86 +175,36 @@ void Fitmap::FitTTV(int nshift, int qint){
   if(nshift>0){
     TransitMask newtran = TransitMask(*cmap_);
     TransitMask temptran = TransitMask(*cmap_);
+    double newmean;
+    newtran.Mean(newmean);
+    temptran.Mean(newmean);
     for (int j=1;j<ntr_;j++){
       for (int ns=1;ns<=nshift; ns++){
-        newtran.Shuffle(ns,j,&temptran);
-        //if(j==4 && ns ==3){
-        //for (int k=0;k<ntr_;k++){
-        //  for (int i=0;i<nbin_;i++){
-        //   cout << tempmask[i+k*nbin_] << " "; 
-        //  }
-        //  cout << "\n" ;
-        //}
-        //}
+        temptran.Mean(newmean);
         FitTran_(qint,temptran,q,temperr); 
-        if(j==4 && ns ==3){
-        for (int k=0;k<ntr_;k++){
-          for (int i=0;i<nbin_;i++){
-           cout << model_[i+k*nbin_] << " "; 
-          }
-          cout << "\n" ;
-        }
-        }
+        newtran.Shuffle(ns,j,&temptran);
         if(temperr<err){
           err=temperr;
           indmin = q;
           nsmin = ns;
         }
         newtran.Shuffle(-ns,j,&temptran);
-        FitTran_(qint,*cmap_,q,temperr);
+        FitTran_(qint,temptran,q,temperr);
         if(temperr<err){
           err=temperr;
           indmin = q;
           nsmin = -ns;
         }
-        //cout << temperr << " " << q << " " << ns << " " << j << " " << high_ << " " << low_<< endl;
       }
         newtran.Shuffle(nsmin,j,&temptran);
         newtran = temptran;
-   //   CopyMask_(tempmap,tempmask,newmap,newmask);
     }
-    FitTran_(qint,*cmap_,indmin,temperr);
-    //cout<< indmin << " " << nsmin << endl; 
+    FitTran_(qint,newtran,indmin,temperr);
+
   }
-  AllTranMask_(indmin);
-  cmap_->TransitModel(dipmask_);
-  cmap_->OutputTransit(model_,high_, low_);
   return;
 }
-//
-//void Fitmap::Shuffle_(int ns, int indey,const double* oldmap,const double* oldmask,double *newmap ,double *newmask ) const {
-//  //do nothing
-//  int newx;
-//  for (int j=0;j<ntr_;j++){
-//    for(int i=0;i<nbin_;i++){
-//      if(j==indey){
-//        if((i+ns)<0){
-//          newx = nbin_+i+ns;
-//        } else {
-//          if((i+ns)>=nbin_){
-//            newx = (i+ns)-nbin_;
-//          } else {
-//          newx = i+ns;
-//          }
-//        }
-//        newmap[i+j*nbin_] = oldmap[newx+j*nbin_];
-//        newmask[i+j*nbin_] = oldmask[newx+j*nbin_];
-//      }else{     
-//        newmap[i+j*nbin_] = oldmap[i+j*nbin_];
-//        newmask[i+j*nbin_] = oldmask[i+j*nbin_];
-//      }
-//    }
-//  }
-//  return;
-//}
-//void Fitmap::CopyMask_(const double* oldmap,const double* oldmask,double *newmap ,double *newmask) const{
-//    for (int j=0;j<ntr_;j++){
-//      for(int i=0;i<nbin_;i++){
-//        newmap[i+j*nbin_] = oldmap[i+j*nbin_];
-//        newmask[i+j*nbin_] = oldmask[i+j*nbin_];
-//      }
-//    }
-//}
+
 void Fitmap::StdOutput(){
  
   for (int j=0;j<ntr_;j++){
@@ -264,13 +215,6 @@ void Fitmap::StdOutput(){
   }
 }
 void Fitmap::SingleMask_(int q,int index,int indey){
-//  if(high==0){
-//    high=high_;
-//  }
-//  if(low==0){
-//    low=low_;
-//  }
-        //cout << q<< " "<< index << " here" << indey << " " << ntr_ << " " << nbin_ <<endl;
   for (int j=0;j<ntr_;j++){
     for (int i=0;i<nbin_;i++){
       if(j==indey){
