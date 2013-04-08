@@ -1,8 +1,8 @@
 # SWIG
 INPHASE = phasefit.i
-INFIT = fitmap.i
+INFIT = maskarray.i transitmask.i fitmap.i
 SoPHASE = phasefit.cc phasefit.h
-SoFIT = fitmap.cc fitmap.h
+SoFIT = maskarray.cc maskarray.h transitmask.cc transitmask.h fitmap.cc fitmap.h  
 INTERFACES = $(INPHASE) $(INFIT)
 WRAPPERS   = $(INTERFACES:.i=_wrap.cxx)
 PROXIES    = $(INTERFACES:.i=.py      )

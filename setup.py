@@ -15,7 +15,16 @@ _phasefit = Extension("_phasefit",
           "phasefit.cc"],
         include_dirs = [numpy_include],
         )
-
+_maskarray = Extension("_maskarray",
+        ["maskarray_wrap.cxx",
+          "maskarray.cc"],
+        include_dirs = [numpy_include],
+        )
+_transitmask = Extension("_transitmask",
+        ["transitmask_wrap.cxx",
+          "transitmask.cc"],
+        include_dirs = [numpy_include],
+        )
 _fitmap = Extension("_fitmap",
         ["fitmap_wrap.cxx",
           "fitmap.cc"],
@@ -27,7 +36,7 @@ setup(name= "Outlier",
 	author      = "Xu Huang",
     author_email = "chelsea@astro.princeton.edu",
     url = "",
-    version     = "0.1.0",
-	py_modules  = ["phasefit","fitmap"],
-    ext_modules = [_phasefit,_fitmap])
+    version     = "1.0.0",
+	py_modules  = ["phasefit","maskarray","transitmask","fitmap"],
+    ext_modules = [_phasefit,_maskarray,_transitmask,_fitmap])
 

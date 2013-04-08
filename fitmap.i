@@ -12,9 +12,11 @@ import_array();
 
 %{
 #include <iostream>
+#include "transitmask.h"
 #include <math.h>
 #include "fitmap.h"
 %}
 
+%include "transitmask.h"
 %include "fitmap.h"
 %clear (double *cmap, int nx, int ny);

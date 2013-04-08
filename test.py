@@ -2,6 +2,8 @@
 import numpy as np
 import scipy as sp
 import phasefit as PF
+import maskarray
+import transitmask
 import fitmap  as FM
 from dataio import *
 def testphase():
@@ -38,16 +40,17 @@ def testfitsigle():
     fits = FM.Fitmap(data)
     #fits.FitSingleMask()
     #e1 = fits.Error()
+    #print e1
     #fits.FitSingleFlat(10)
     #e2 = fits.Error()
-    fits.FitTTV()
+    #fits.FitTTV()
     #e3 = fits.Error()
-    #fits.FitTTV(3)
+    fits.FitTTV(3)
     #e4 = fits.Error()
-    #print e3
+    #print e1,e2
     #print e3,e4
     #print e1,e2,e3
-    fits.StdOutput()
+    #fits.StdOutput()
     return
 
 if __name__ == '__main__':
