@@ -4,6 +4,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import cm
 def main():
+    #infile = 'Kepler36b'
     infile = 'temp'
     data = np.loadtxt(infile)
     mdat = np.ma.masked_array(data,data==0)
@@ -13,7 +14,7 @@ def main():
     plt.imshow(mdat)
     plt.xlabel("Nbin")
     plt.ylabel("Ntran")
-    plt.title("Transit and NonTTV-model")
+    plt.title("Single Outlier model")
     plt.colorbar()
     plt.show()
     return

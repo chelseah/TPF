@@ -172,6 +172,7 @@ void Fitmap::FitTTV(int nshift, int qint){
   int q=0,indmin=0,nsmin=0;
   double err=0,temperr=0;
   FitTran_(qint,*cmap_,indmin,err);
+  cout << err << endl;
   if(nshift>0){
     TransitMask newtran = TransitMask(*cmap_);
     TransitMask temptran = TransitMask(*cmap_);
@@ -179,6 +180,8 @@ void Fitmap::FitTTV(int nshift, int qint){
     newtran.Mean(newmean);
     temptran.Mean(newmean);
     for (int j=1;j<ntr_;j++){
+      nsmin=0;
+      q=0;
       for (int ns=1;ns<=nshift; ns++){
         temptran.Mean(newmean);
         FitTran_(qint,temptran,q,temperr); 
@@ -200,13 +203,17 @@ void Fitmap::FitTTV(int nshift, int qint){
         newtran = temptran;
     }
     FitTran_(qint,newtran,indmin,temperr);
-
+    //newtran.Chisquare(model_,temperr);
+    cout.precision(10);
+    cout << temperr << endl;
   }
+  //cout << " " << high_ << " " << low_ << endl;
   return;
 }
 
 void Fitmap::StdOutput(){
  
+  cout.precision(10);
   for (int j=0;j<ntr_;j++){
     for (int i=0;i<nbin_;i++){
       cout << model_[i+j*nbin_] << " "; 

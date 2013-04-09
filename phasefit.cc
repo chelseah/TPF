@@ -14,7 +14,8 @@ PhaseLc::PhaseLc(double* time, int lt, double* mag, int lm, double period, doubl
                               //we will want onevenly binned phases
     magbin_[i]=0;
   }
-  ntran_ = (time_[lt-1]-time[0])/period_;
+  ntran_ = (time[lt-1]-epoch-0.5*period)/period+1;
+  //cout << ntran_<< " " << lbin_ << " " <<(time_[lt-1]-epoch-0.5*period)/period_<< endl;
 }
 
 PhaseLc::~PhaseLc(){
@@ -54,7 +55,7 @@ void PhaseLc::TransitColor(double q, int bin){
   int is = (int)(bin*(0.5-q));
   int ie = (int)(bin*(0.5+q));
   int j,k,indextran, intran=ie-is+1;
- // cout<< is << " " << ie << " " << ntran_<<endl;
+  //cout<< is << " " << ie << " " << intran << " " << ntran_<<endl;
   double * color=new double [intran*ntran_];
   double * count = new double [intran*ntran_];
   for (j=0;j<ntran_;j++){
@@ -63,6 +64,7 @@ void PhaseLc::TransitColor(double q, int bin){
       count[k+j*intran]=0;
     }
   }
+
   for (int i=0; i< lt_; i++){
     indextran=(int)((time_[i]-epoch_-0.5*period_)*f);
     ph = (time_[i]-epoch_-0.5*period_)*f-indextran;
@@ -70,22 +72,18 @@ void PhaseLc::TransitColor(double q, int bin){
     k = (int)(bin*ph);
     if((is<=k) && (k<=ie)){
       color[(k-is)+indextran*intran]+=mag_[i];    
-      count[(k-is)+indextran*intran]+=1;    
+      count[(k-is)+indextran*intran]+=1;   
+    //  cout<< count[(k-is)+indextran*intran] << " " << k-is+indextran*intran << " " << indextran << endl;
     }
   }
-
   for (j=0;j<ntran_;j++){
     for (k=0; k<intran;k++){
       if(count[k+j*intran]!=0){
         color[k+j*intran] = color[k+j*intran]/count[k+j*intran]; 
       } 
-      //else {
-      //  cout<<color[k+j*ntran_]<< " ";
-      // }
-      // cout<<color[k+j*ntran_]<< " " << count[k+j*ntran_] <<endl;
-       cout<<color[k+j*intran]<< " ";
+        cout<<color[k+j*intran]<< " ";
     }
-       cout<<" "<<endl;
+        cout<<" "<<endl;
   }
   delete [] color;
   delete [] count;
