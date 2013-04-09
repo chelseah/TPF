@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import numpy as np
 import scipy as sp
+import matplotlib 
+from matplotlib import pyplot as plt
 import phasefit as PF
 import maskarray
 import transitmask
@@ -32,9 +34,24 @@ def testphase():
     n0tran=round((time[0]-epoch-0.5*period)/period)
    # print n0tran,epoch
     #print time.shape
-    phaselc = PF.PhaseLc(time,mag,period,epoch)
+    phaselc = PF.PhaseLc(time,mag,period,epoch,200)
+    #magbin = np.zeros(200)
+    #phases = np.arange(200)*1.0/200.0
+    ntran = int((max(time)-epoch-0.5*period)/period)
+    nbin = int(2*q*400)
+    color = np.zeros([nbin,ntran])
     #phaselc.Foldts()
+    #phaselc.OutputPhase(magbin)
+    #print magbin
+    #phaselc.StandOutputPhase()
     phaselc.TransitColor(2*q,400)
+    phaselc.OutputColor(color)
+    mdat = np.ma.masked_array(color,color==0)
+
+    plt.imshow(mdat)
+    #phaselc.StandOutputColor()
+    #plt.plot(phases,magbin)
+    plt.show()
     return
 
 def testfitsigle():
@@ -59,5 +76,5 @@ def testfitsigle():
     return
 
 if __name__ == '__main__':
-    #testphase()
-    testfitsigle()
+    testphase()
+    #testfitsigle()

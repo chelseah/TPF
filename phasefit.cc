@@ -3,7 +3,13 @@ PhaseLc::PhaseLc(double* time, int lt, double* mag, int lm, double period, doubl
   :period_(period),epoch_(epoch),lbin_(bin),lt_(lt){
   time_ = new double [lt];
   mag_ = new double [lm];
+  double tmax=0;
+  color_=NULL;
+  intran_= 0;
   for (int i = 0; i < lt; i++){
+    if(time[i]>tmax){
+      tmax=time[i];
+    }
     time_[i] = time[i];
     mag_[i] = mag[i];
   }
@@ -14,11 +20,15 @@ PhaseLc::PhaseLc(double* time, int lt, double* mag, int lm, double period, doubl
                               //we will want onevenly binned phases
     magbin_[i]=0;
   }
-  ntran_ = (time[lt-1]-epoch-0.5*period)/period+1;
-  //cout << ntran_<< " " << lbin_ << " " <<(time_[lt-1]-epoch-0.5*period)/period_<< endl;
-}
+  ntran_ = (tmax-epoch-0.5*period)/period+1;
+//  cout << ntran_<< " " << lbin_ << " " <<(int)((time_[lt-1]-epoch-0.5*period)/period_)<< " " << time_[lt-1] << endl;
+
+  }
 
 PhaseLc::~PhaseLc(){
+  if(color_){
+    delete [] color_;
+  }
   delete [] time_;
   delete [] mag_;
   delete [] phase_;
@@ -42,7 +52,6 @@ void PhaseLc::Foldts(){
   for (k=0; k<lbin_; k++){
     if(count[k]!=0) {
       magbin_[k]/=count[k];
-    //  cout<< phase_[k] << " " << magbin_[k]  << endl;
     }
   }
   delete [] count;
@@ -54,14 +63,14 @@ void PhaseLc::TransitColor(double q, int bin){
   if(bin==0) bin=lbin_;
   int is = (int)(bin*(0.5-q));
   int ie = (int)(bin*(0.5+q));
-  int j,k,indextran, intran=ie-is+1;
-  //cout<< is << " " << ie << " " << intran << " " << ntran_<<endl;
-  double * color=new double [intran*ntran_];
-  double * count = new double [intran*ntran_];
+  int j,k,indextran, tempindex=0;
+  intran_=ie-is+1;
+  color_=new double [intran_*ntran_];
+  double * count = new double [intran_*ntran_];
   for (j=0;j<ntran_;j++){
-    for (k=0; k<intran; k++){
-      color[k+j*intran]=0;
-      count[k+j*intran]=0;
+    for (k=0; k<intran_; k++){
+      color_[k+j*intran_]=0;
+      count[k+j*intran_]=0;
     }
   }
 
@@ -71,21 +80,55 @@ void PhaseLc::TransitColor(double q, int bin){
     if(ph<0) ph+=1;
     k = (int)(bin*ph);
     if((is<=k) && (k<=ie)){
-      color[(k-is)+indextran*intran]+=mag_[i];    
-      count[(k-is)+indextran*intran]+=1;   
-    //  cout<< count[(k-is)+indextran*intran] << " " << k-is+indextran*intran << " " << indextran << endl;
+      color_[(k-is)+indextran*intran_]+=mag_[i];    
+      count[(k-is)+indextran*intran_]+=1;   
+      if(((k-is)+indextran*intran_)>tempindex){
+        tempindex=(k-is)+indextran*intran_;
+      }
     }
   }
   for (j=0;j<ntran_;j++){
-    for (k=0; k<intran;k++){
-      if(count[k+j*intran]!=0){
-        color[k+j*intran] = color[k+j*intran]/count[k+j*intran]; 
+    for (k=0; k<intran_;k++){
+      if(count[k+j*intran_]!=0){
+        color_[k+j*intran_] = color_[k+j*intran_]/count[k+j*intran_]; 
       } 
-        cout<<color[k+j*intran]<< " ";
     }
-        cout<<" "<<endl;
   }
-  delete [] color;
   delete [] count;
+  return;
+}
+
+void PhaseLc::OutputPhase(double *magbin, int lbin){
+  for (int i=0; i<lbin_; i++){
+    magbin[i] = magbin_[i];
+  }
+  return;
+}
+void PhaseLc::OutputColor(double *color, int nbin, int ntran){
+  for (int j=0; j<ntran_; j++){
+    for (int i=0; i<intran_; i++){
+      color[i+j*intran_] = color_[i+j*intran_];
+    }
+  }
+  return;
+}
+void PhaseLc::StandOutputPhase(int precision){
+  cout.precision(precision);
+  cout << "#PHASE MAG" <<endl;
+  cout << "#[1] [2]";
+  for (int i=0;i<lbin_; i++){
+    cout << phase_[i] << " " << magbin_[i]  << endl; 
+  }
+  return;
+}
+
+void PhaseLc::StandOutputColor(int precision){
+  cout.precision(precision);
+  for (int j=0; j<ntran_; j++){
+    for (int i=0; i<intran_; i++){
+      cout << color_[i+j*intran_] << " ";
+    }
+      cout << "\n"; 
+  }
   return;
 }

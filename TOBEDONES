@@ -1,0 +1,11 @@
+a) a c++ wrapper for the package incase people don't have 
+swig or python installed.
+b) documentation
+c) output for phasefit class (Mostly done, although the python 2d part is 
+still buggy)
+d) uneven bins for phasefit class
+e) better statistic for fitmap
+f) output more useful information for fitmap
+g) python flag
+h) get rid of the transits that doesn't contain information (meaning 
+containing too many zeros if user require)
