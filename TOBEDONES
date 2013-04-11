@@ -1,11 +1,16 @@
 a) a c++ wrapper for the package incase people don't have 
-swig or python installed.
-b) documentation
+swig or python installed. (urgent, since I don't have it on big cluster,let's 
+wait till tomorrow to see if this works on the new system)
+b) documentation (urgent, since I will forgot what to do later)
 c) output for phasefit class (Mostly done, although the python 2d part is 
 still buggy)
-d) uneven bins for phasefit class
-e) better statistic for fitmap
-f) output more useful information for fitmap
-g) python flag
+d) uneven bins for phasefit class (not urgent)
+e) better statistic for fitmap (probably not urgent)
+f) output more useful information for fitmap, for example, a shifted cmap 
+instead of the model (can hack to do that, but need improvement, the urgent 
+information should be the chisquare and the shifting sequence which help to 
+reproduce the map)
+#Done g) python flag (Urgent, related to the wrapper part)
 h) get rid of the transits that doesn't contain information (meaning 
-containing too many zeros if user require)
+containing too many zeros if user require) (not urgent, might need more 
+discussion with G)

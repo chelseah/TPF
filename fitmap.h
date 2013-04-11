@@ -10,7 +10,7 @@ class Fitmap{
    *
    * */
   public:
-    Fitmap(double *cmap, int nx, int ny);
+    Fitmap(double *cmap, int nx, int ny, bool pyflag=true);
     ~Fitmap();
     void FitSingleMask();
     void FitSingleFlat(int qint=10);

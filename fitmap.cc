@@ -1,21 +1,24 @@
 #include"fitmap.h"
-Fitmap::Fitmap(double *cmap, int nx, int ny)
+Fitmap::Fitmap(double *cmap, int nx, int ny, bool pyflag)
   :nbin_(nx),ntr_(ny){
-    double *pycmap = new double [nx*ny];//hack python
-    for (int j=0;j<ntr_;j++){
-      for (int i=0; i<nbin_;i++){
-        pycmap[i+j*nbin_] = cmap[j+i*ntr_];
+    if(pyflag){
+      double *pycmap = new double [nx*ny];//hack python
+      for (int j=0;j<ntr_;j++){
+        for (int i=0; i<nbin_;i++){
+          pycmap[i+j*nbin_] = cmap[j+i*ntr_];
+        }
       }
+      cmap_=new TransitMask(pycmap, nx, ny,0.0,0.0);
+      delete [] pycmap;
+    } else{
+      cmap_=new TransitMask(cmap,nx,ny,0.0,0.0);
     }
-    cmap_=new TransitMask(pycmap, nx, ny,0.0,0.0);
     model_ = new double [nx*ny];   
     mask_ = new double [nx*ny];  
     dipmask_ = new double [nx*ny];  
     maskoned_ = new double [nx];
     cmap_->OneDMask(1,maskoned_);
     cmap_->Mask(mask_);
-
-    delete [] pycmap;
 }
 Fitmap::~Fitmap(){
   delete cmap_;
@@ -179,7 +182,7 @@ void Fitmap::FitTTV(int nshift, int qint){
     double newmean;
     newtran.Mean(newmean);
     temptran.Mean(newmean);
-    for (int j=1;j<ntr_;j++){
+    for (int j=0;j<ntr_;j++){
       nsmin=0;
       q=0;
       for (int ns=1;ns<=nshift; ns++){
@@ -203,6 +206,7 @@ void Fitmap::FitTTV(int nshift, int qint){
         newtran = temptran;
     }
     FitTran_(qint,newtran,indmin,temperr);
+    newtran.StandOutput(); 
     //newtran.Chisquare(model_,temperr);
     cout.precision(10);
     cout << temperr << endl;

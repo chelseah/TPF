@@ -12,21 +12,25 @@ def testphase():
     #infile = 'data/HAT-365-0014102.tfalc' #pure outlier
     #infile = 'data/HAT-364-0000605.tfalc' #outlier + flatpart of curve
     #infile = 'data/HAT-317-0001481.ltf' #transit
-    infile = 'data/kplr011401755.rmtran'
+    #infile = 'data/kplr011401755.rmtran'
+    infile = 'data/CBPs/Kepler16/kplr012644769.ltf'
     time = []; readcolumn(time,1,infile);time=np.array(time)
     mag = []; readcolumn(mag,7,infile);mag=np.array(mag)
     #period = 16.3816800  
     #period = 6.1594446
     #period = 7.2491767
-    period = 13.8550595
+    #period = 13.8550595
+    period = 110.5253269*2
     #epoch = 55513.5298468
     #epoch = 55508.9172669
     #epoch = 55507.2281505
-    epoch = 2454974.3977524
+    #epoch = 2454974.3977524
+    epoch = 2454993.4068241
     #q = 0.0109
     #q = 0.0127
     #q = 0.0202
-    q = 0.03
+    #q = 0.03
+    q = 0.0015
     epoch += period*q/2.
     n0tran=round((time[0]-epoch-0.5*period)/period)
     if n0tran<0: 
@@ -37,25 +41,25 @@ def testphase():
     phaselc = PF.PhaseLc(time,mag,period,epoch,200)
     #magbin = np.zeros(200)
     #phases = np.arange(200)*1.0/200.0
-    ntran = int((max(time)-epoch-0.5*period)/period)
-    nbin = int(2*q*400)
-    color = np.zeros([nbin,ntran])
+    #ntran = int((max(time)-epoch-0.5*period)/period)
+    #nbin = int(2*q*400)
+    #color = np.zeros([nbin,ntran])
     #phaselc.Foldts()
     #phaselc.OutputPhase(magbin)
     #print magbin
     #phaselc.StandOutputPhase()
-    phaselc.TransitColor(2*q,400)
-    phaselc.OutputColor(color)
-    mdat = np.ma.masked_array(color,color==0)
+    phaselc.TransitColor(0.5,700)
+    #phaselc.OutputColor(color)
+    #mdat = np.ma.masked_array(color,color==0)
 
-    plt.imshow(mdat)
-    #phaselc.StandOutputColor()
+    #plt.imshow(mdat)
+    phaselc.StandOutputColor()
     #plt.plot(phases,magbin)
-    plt.show()
+    #plt.show()
     return
 
 def testfitsigle():
-    data = np.loadtxt("Kepler36b")
+    data = np.loadtxt("data/Kepler36/Kepler36b")
     #data = np.loadtxt("temp1")
     data = np.swapaxes(data,0,1).copy(order='C')
     fits = FM.Fitmap(data)
@@ -64,11 +68,11 @@ def testfitsigle():
     #print e1
     #fits.FitSingleFlat(10)
     #e2 = fits.Error()
-    fits.FitTTV()
-    e3 = fits.Error()
-    fits.FitTTV(3)
+    #fits.FitTTV()
+    #e3 = fits.Error()
+    fits.FitTTV(5)
     #e4 = fits.Error()
-    print e3
+    #print e3
     #print e1,e2
     #print e2,e3,e4
     #print e1,e2,e3
@@ -76,5 +80,5 @@ def testfitsigle():
     return
 
 if __name__ == '__main__':
-    testphase()
-    #testfitsigle()
+    #testphase()
+    testfitsigle()
