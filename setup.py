@@ -31,12 +31,17 @@ _fitmap = Extension("_fitmap",
         include_dirs = [numpy_include],
         )
 
+_blssimple = Extension("_blssimple",
+        ["blssimple_wrap.cxx",
+          "blssimple.cc"],
+        include_dirs = [numpy_include],
+        )
 setup(name= "Outlier",
 	description = "phasefold to deal with outliers",
 	author      = "Xu Huang",
     author_email = "chelsea@astro.princeton.edu",
     url = "",
     version     = "1.0.0",
-	py_modules  = ["phasefit","maskarray","transitmask","fitmap"],
-    ext_modules = [_phasefit,_maskarray,_transitmask,_fitmap])
+	py_modules  = ["phasefit","maskarray","transitmask","fitmap","blssimple"],
+    ext_modules = [_phasefit,_maskarray,_transitmask,_fitmap,_blssimple])
 

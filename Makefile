@@ -1,12 +1,14 @@
 # SWIG
 INPHASE = phasefit.i
 INFIT = maskarray.i transitmask.i fitmap.i
+INBLS = blssimple.i
 SoPHASE = phasefit.cc phasefit.h
-SoFIT = maskarray.cc maskarray.h transitmask.cc transitmask.h fitmap.cc fitmap.h  
-INTERFACES = $(INPHASE) $(INFIT)
+SoFIT = maskarray.cc maskarray.h transitmask.cc transitmask.h fitmap.cc fitmap.h
+SoBLS = blssimple.cc blssimple.h
+INTERFACES = $(INPHASE) $(INFIT) $(INBLS)
 WRAPPERS   = $(INTERFACES:.i=_wrap.cxx)
 PROXIES    = $(INTERFACES:.i=.py      )
-Sources  = $(SoPHASE) $(SoPHASE)
+Sources  = $(SoPHASE) $(SoPHASE) $(SoBLS)
 
 # Default target: build the tests
 

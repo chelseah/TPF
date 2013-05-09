@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # openfile.py this file is used for data io control
 from types import *
-import pyfits
 import math
 import os
 import string
